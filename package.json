@@ -1,0 +1,10 @@
+{
+  "name": "quran_search_terms",
+  "version": "1.0.0",
+  "description": "Outputs search results from quran.com's API",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.88.2"
+  }
+}
