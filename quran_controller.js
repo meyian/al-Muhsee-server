@@ -13,6 +13,7 @@ Todo:
 const request = require("request");
 const fs = require("fs");
 const path = require("path");
+const { getTermVerses } = require("./terms_model");
 
 const defaultOptions = {
   method: "GET",
@@ -51,7 +52,7 @@ const getNumberOfPages = async (searchTerm) => {
   return data.search.total_pages;
 };
 
-const getThenSaveResultsToFile = async (searchTerm) => {
+const fetchQuranTermsFromApi = async (searchTerm) => {
   const numPages = await getNumberOfPages(searchTerm);
   const searchResults = [];
 
@@ -65,14 +66,23 @@ const getThenSaveResultsToFile = async (searchTerm) => {
     });
   }
 
-  const filePath = path.join(__dirname, "text", `${searchTerm}.txt`);
-  fs.writeFileSync(filePath, JSON.stringify(searchResults, null, 2));
+  // TODO: clear out duplicates and html tags
+
+  return searchResults;
 };
 
-const main = async () => {
-  searchTerms.forEach(async (searchTerm) => {
-    await getThenSaveResultsToFile(searchTerm);
-  });
+const fetchQuranTermsFromDB = async (term) => {
+  return await getTermVerses(term);
 };
 
-main();
+const getQuranTerms = async (searchTerm) => {
+  const verses = await fetchQuranTermsFromDB(searchTerm);
+
+  if (!verses) {
+    return await fetchQuranTermsFromApi(searchTerm);
+  }
+};
+
+module.exports = {
+  getQuranTerms,
+};

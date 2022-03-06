@@ -116,4 +116,6 @@ dist
 
 *notes*.txt
 
-/text
+./text/*
+text/
+*.txt
